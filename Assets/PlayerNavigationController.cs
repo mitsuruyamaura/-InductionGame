@@ -8,7 +8,7 @@ public class PlayerNavigationController : MonoBehaviour
 {
     private NavMeshAgent agent;
     private string layerName = "Floor";
-    private int layerMask = 1 << 6;
+    //private int layerMask = 1 << 6;　　　// ビット演算でマスクを作成する。未使用
     private PlayerAnimation playerAnim;
     private Vector3 destination;
 
@@ -32,30 +32,42 @@ public class PlayerNavigationController : MonoBehaviour
 
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
+            // 移動できる地点か判定する
             CheckRoot();
         }
 
-        if (Vector3.Distance(transform.position, destination) <= 0.5f) {
-            agent.speed = 0;
-            playerAnim.MoveAnimation(agent.speed);
+        // 目的地に近づいたら
+        if (Vector3.Distance(transform.position, destination) <= 0.15f) {
+            // 停止させる
+            //agent.speed = 0;
+            playerAnim.MoveAnimation(0);
         }
     }
 
-
+    /// <summary>
+    /// クリックした地点が NavMesh 上の経路か判定
+    /// </summary>
     private void CheckRoot() {
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Debug.Log(ray.direction);
-        Debug.Log(LayerMask.NameToLayer("Floor"));
+        //Debug.Log(ray.direction);
+        //Debug.Log(LayerMask.NameToLayer("Floor"));
+        
+        // 移動可能な地点であれば
         if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 100, LayerMask.GetMask(layerName))) {
+            // NavMesh で移動
             NavigationMove(hit.point);
+            // 目的地を登録
             destination = hit.point;
         }
     }
 
-
+    /// <summary>
+    /// NavMesh による経路移動と移動アニメ同期
+    /// </summary>
+    /// <param name="movePos"></param>
     private void NavigationMove(Vector3 movePos) {
-        Debug.Log(movePos);
+        //Debug.Log(movePos);
         agent.speed = moveSpeed;
         agent.SetDestination(movePos);
         playerAnim.MoveAnimation(agent.speed);

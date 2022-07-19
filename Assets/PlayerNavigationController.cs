@@ -7,13 +7,20 @@ using UnityEngine.AI;
 public class PlayerNavigationController : MonoBehaviour
 {
     private NavMeshAgent agent;
-    string layerName = "Floor";
-    int layerMask = 1 << 6;
+    private string layerName = "Floor";
+    private int layerMask = 1 << 6;
+    private PlayerAnimation playerAnim;
+    private Vector3 destination;
+
 
     [SerializeField]
     private float moveSpeed;
 
+
     void Start() {
+        if (!TryGetComponent(out playerAnim)) {
+            Debug.Log("PlayerAnimation を取得出来ません。");
+        }
         if (!TryGetComponent(out agent)) {
             Debug.Log("NavMeshAgent を取得出来ません。");
             return;
@@ -27,6 +34,11 @@ public class PlayerNavigationController : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {
             CheckRoot();
         }
+
+        if (Vector3.Distance(transform.position, destination) <= 0.5f) {
+            agent.speed = 0;
+            playerAnim.MoveAnimation(agent.speed);
+        }
     }
 
 
@@ -37,6 +49,7 @@ public class PlayerNavigationController : MonoBehaviour
         Debug.Log(LayerMask.NameToLayer("Floor"));
         if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 100, LayerMask.GetMask(layerName))) {
             NavigationMove(hit.point);
+            destination = hit.point;
         }
     }
 
@@ -45,6 +58,6 @@ public class PlayerNavigationController : MonoBehaviour
         Debug.Log(movePos);
         agent.speed = moveSpeed;
         agent.SetDestination(movePos);
-
+        playerAnim.MoveAnimation(agent.speed);
     }
 }

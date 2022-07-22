@@ -41,6 +41,7 @@ public class PlayerNavigationController : MonoBehaviour
             // ’â~‚³‚¹‚é
             //agent.speed = 0;
             playerAnim.MoveAnimation(0);
+            agent.ResetPath();
         }
     }
 
@@ -55,6 +56,12 @@ public class PlayerNavigationController : MonoBehaviour
         
         // ˆÚ“®‰Â”\‚È’n“_‚Å‚ ‚ê‚Î
         if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 100, LayerMask.GetMask(layerName))) {
+
+            // áŠQ•¨‚ª‚ ‚éê‡‚É‚ÍˆÚ“®‚³‚¹‚È‚¢
+            if (hit.collider.TryGetComponent(out ObstacleBase obstacleBase)) {
+                return;
+            }
+
             // NavMesh ‚ÅˆÚ“®
             NavigationMove(hit.point);
             // –Ú“I’n‚ğ“o˜^

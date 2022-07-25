@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// プレイヤーの状態の種類
+/// </summary>
+public enum PlayerState {
+    Down,
+    GameUp,
+    Wait,
+    Play,
+}
+
 [RequireComponent(typeof(NavMeshAgent))]
 public class PlayerNavigationController : MonoBehaviour
 {
@@ -16,6 +26,15 @@ public class PlayerNavigationController : MonoBehaviour
     [SerializeField]
     private float moveSpeed;
 
+    [SerializeField]
+    private PlayerState currentPlayerState;
+
+    public PlayerState CurrentPlayerState
+    {
+        get => currentPlayerState;
+        set => currentPlayerState = value;
+    }
+
 
     void Start() {
         if (!TryGetComponent(out playerAnim)) {
@@ -28,9 +47,19 @@ public class PlayerNavigationController : MonoBehaviour
         //agent.speed = 0;
 
         //agent.SetDestination(new(1 , 0, 1));
+        CurrentPlayerState = PlayerState.Play;
+
+        StartCoroutine(ObserveOffMeshLink());
     }
 
     void Update() {
+        if (currentPlayerState != PlayerState.Play) {
+            agent.speed = 0;
+            playerAnim.MoveAnimation(0);
+            agent.ResetPath();
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0)) {
             // 移動できる地点か判定する
             CheckRoot();
@@ -43,6 +72,51 @@ public class PlayerNavigationController : MonoBehaviour
             playerAnim.MoveAnimation(0);
             agent.ResetPath();
         }
+    }
+
+
+    private IEnumerator ObserveOffMeshLink() {
+
+        //// OffMeshLink の挙動がオートの場合にはこの処理は行わない
+        //if (agent.autoTraverseOffMeshLink) {
+        //    yield break;
+        //}
+
+        while (true) {
+            while (agent.isOnOffMeshLink) {
+                if (!playerAnim.GetAnimator().GetCurrentAnimatorStateInfo(0).IsName("Jump")) {
+                    // Trigger だと上手く遷移できないため、Bool に変更
+                    //playerAnim.ChangeAnimationFromTrigger(PlayerAnimationState.Jump);
+
+                    playerAnim.ChangeAnimationBool(PlayerAnimationState.Jump, true);
+                }              
+                yield return null;
+            }
+            if (playerAnim.GetAnimator() != null && playerAnim.GetAnimator().GetCurrentAnimatorStateInfo(0).IsName("Jump")) {
+                playerAnim.ChangeAnimationBool(PlayerAnimationState.Jump, false);
+            }
+
+
+            // NavMesh による移動を停止(Path 情報は保持している)
+            //agent.isStopped = true;
+
+            //// TODO 高さがある場合には調整を入れる
+
+            // テレポートする
+            //yield return OffMeshLinkProcess(agent.currentOffMeshLinkData.endPos);
+
+            // OffMeshLink の計算終了
+            //agent.CompleteOffMeshLink();
+
+            // NavMesh による移動再開
+            //agent.isStopped = false;
+
+            yield return null;
+        }
+
+        //IEnumerator OffMeshLinkProcess(Vector3 targetPos) {
+        //    yield return null;
+        //}
     }
 
     /// <summary>

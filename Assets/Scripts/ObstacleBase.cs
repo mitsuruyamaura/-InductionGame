@@ -7,6 +7,12 @@ public class ObstacleBase : MonoBehaviour
 {
     protected NavMeshObstacle navMeshObstacle;
 
+    [SerializeField]
+    protected ObstacleType obstacleType;
+
+    public ObstacleType ObstacleType { get => obstacleType; }
+
+
     // Start is called before the first frame update
     protected virtual void Start()
     {

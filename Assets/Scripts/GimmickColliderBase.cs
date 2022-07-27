@@ -2,19 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GimmickCollider : MonoBehaviour
+public class GimmickColliderBase : MonoBehaviour
 {
     [SerializeField]
-    private GameObject gimmickTarget;
+    protected GameObject gimmickTarget;
 
 
-    private void Start() {
+    protected virtual void Start() {
         if (gimmickTarget != null) {
             gimmickTarget.SetActive(false);
         }
     }
 
-    private void OnTriggerEnter(Collider other) {
+    protected virtual void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out PlayerCollider playerCollider)) {
 
             // TODO ÉAÉjÉÅÇ≥ÇπÇÈ

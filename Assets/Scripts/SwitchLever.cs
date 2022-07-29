@@ -6,7 +6,8 @@ public class SwitchLever : MonoBehaviour
 {
     private Animator anim;
     private bool isLeverActivated;
-    private bool isOnlyOnceActivated;      // 一度レバーを操作したら true になる
+    private bool isOnlyOnceActivated;                // 一度レバーを操作したら true になる
+    private string switchAnimParameter = "Switched";
 
     public bool IsOnlyOnceActivated { get => isOnlyOnceActivated; }
 
@@ -32,7 +33,8 @@ public class SwitchLever : MonoBehaviour
         }
         isOnlyOnceActivated = true;
         isLeverActivated = !isLeverActivated;
-        anim.SetBool("Switched", isLeverActivated);
-        Debug.Log(isLeverActivated);
+        anim.SetBool(switchAnimParameter, isLeverActivated);
+        
+        //Debug.Log(isLeverActivated);
     }
 }

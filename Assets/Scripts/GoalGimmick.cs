@@ -15,9 +15,14 @@ public class GoalGimmick : MonoBehaviour
     private Animator anim;
 
     private bool isGoalOpen;   // true なら開いている
+    private string doorAnimParameter = "Opened";
 
-
-    public IEnumerator PlayOpenDoor(PlayerNavigationController playerNavigationController) {
+    /// <summary>
+    /// ドアの開閉
+    /// </summary>
+    /// <param name="playerNavigationController"></param>
+    /// <returns></returns>
+    public IEnumerator ActivateDoor(PlayerNavigationController playerNavigationController) {
 
         // カメラ移動
         MainCameraManager.instance.MainCamera.Priority = 5;
@@ -28,10 +33,11 @@ public class GoalGimmick : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
+        // ドアの開閉状態を切り替え
         isGoalOpen = !isGoalOpen;
 
-        // アニメ再生
-        anim.SetBool("Opened", isGoalOpen);
+        // ドアの開閉アニメ再生
+        anim.SetBool(doorAnimParameter, isGoalOpen);
 
         yield return new WaitForSeconds(2.0f);
 

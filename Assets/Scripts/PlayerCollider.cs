@@ -53,13 +53,20 @@ public class PlayerCollider : MonoBehaviour
         };
     }
 
-
+    /// <summary>
+    /// 倒れるアニメ再生
+    /// </summary>
     private void DownPlayer() {
         navigationController.CurrentPlayerState = PlayerState.Down;
         playerAnim.ChangeAnimationBool(PlayerAnimationState.Down, true);
         StartCoroutine(Restart());
     }
 
+    /// <summary>
+    /// リスタート処理
+    /// リスタート地点へ移動。アニメをアイドルに戻し、ゲームの状態をPlayに戻して画面タップを可能にする
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator Restart() {
         yield return new WaitForSeconds(2.0f);
 

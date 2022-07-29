@@ -28,14 +28,20 @@ public class GoalSwitchCollider : GimmickColliderBase
             boxCol.enabled = false;
             switchLever.SwitchActivateLever();
             //StartCoroutine(goalGimmick.PlayOpenDoor(hat.PlayerNavigationController));
-            StartCoroutine(PreparePlayOpenDoor(hat.PlayerNavigationController));         
+            StartCoroutine(PrepareActivateDoor(hat.PlayerNavigationController));         
         }
     }
 
+    /// <summary>
+    /// ドア開閉の準備
+    /// </summary>
+    /// <param name="playerNavigationController"></param>
+    /// <returns></returns>
+    private IEnumerator PrepareActivateDoor(PlayerNavigationController playerNavigationController) {
+        // ドアの開閉アニメが終了するまで待機
+        yield return StartCoroutine(goalGimmick.ActivateDoor(playerNavigationController));
 
-    private IEnumerator PreparePlayOpenDoor(PlayerNavigationController playerNavigationController) {
-        yield return StartCoroutine(goalGimmick.PlayOpenDoor(playerNavigationController));
-
+        // 繰り返し起動できるレバーの場合のみ、コライダーをオンにする
         if (switchLever.IsAnyTimeSwitch) {
             boxCol.enabled = true;
         }

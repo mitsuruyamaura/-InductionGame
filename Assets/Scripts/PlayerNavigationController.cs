@@ -78,7 +78,10 @@ public class PlayerNavigationController : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// OffMeshLink の監視
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator ObserveOffMeshLink() {
 
         //// OffMeshLink の挙動がオートの場合にはこの処理は行わない

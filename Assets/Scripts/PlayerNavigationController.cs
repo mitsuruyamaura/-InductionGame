@@ -36,6 +36,10 @@ public class PlayerNavigationController : MonoBehaviour
     }
 
 
+    public bool GetOnOffMeshLink() {
+        return agent.isOnOffMeshLink;
+    }
+
     void Start() {
         if (!TryGetComponent(out playerAnim)) {
             Debug.Log("PlayerAnimation を取得出来ません。");
@@ -74,7 +78,10 @@ public class PlayerNavigationController : MonoBehaviour
         }
     }
 
-
+    /// <summary>
+    /// OffMeshLink の監視
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator ObserveOffMeshLink() {
 
         //// OffMeshLink の挙動がオートの場合にはこの処理は行わない
@@ -94,6 +101,7 @@ public class PlayerNavigationController : MonoBehaviour
             }
             if (playerAnim.GetAnimator() != null && playerAnim.GetAnimator().GetCurrentAnimatorStateInfo(0).IsName("Jump")) {
                 playerAnim.ChangeAnimationBool(PlayerAnimationState.Jump, false);
+                //Debug.Log("OffMeshによる移動終了");
             }
 
 

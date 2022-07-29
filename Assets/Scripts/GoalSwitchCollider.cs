@@ -7,6 +7,9 @@ public class GoalSwitchCollider : GimmickColliderBase
     [SerializeField]
     private GoalGimmick goalGimmick;
 
+    [SerializeField]
+    private SwitchLever switchLever;
+
     private BoxCollider boxCol;
 
     protected override void Start()
@@ -15,9 +18,26 @@ public class GoalSwitchCollider : GimmickColliderBase
     }
 
     protected override void OnTriggerEnter(Collider other) {
-        if (other.TryGetComponent(out PlayerNavigationController playerNavigationController)) {
+
+        // すでにレバーを操作済みで、再度の操作ができないレバーの場合、処理しない
+        if (switchLever.IsOnlyOnceActivated && !switchLever.IsAnyTimeSwitch) {
+            return;
+        }
+
+        if (other.TryGetComponent(out Hat hat)) {    //PlayerNavigationController playerNavigationController
             boxCol.enabled = false;
-            StartCoroutine(goalGimmick.PlayOpenDoor(playerNavigationController));
+            switchLever.SwitchActivateLever();
+            //StartCoroutine(goalGimmick.PlayOpenDoor(hat.PlayerNavigationController));
+            StartCoroutine(PreparePlayOpenDoor(hat.PlayerNavigationController));         
+        }
+    }
+
+
+    private IEnumerator PreparePlayOpenDoor(PlayerNavigationController playerNavigationController) {
+        yield return StartCoroutine(goalGimmick.PlayOpenDoor(playerNavigationController));
+
+        if (switchLever.IsAnyTimeSwitch) {
+            boxCol.enabled = true;
         }
     }
 }

@@ -14,6 +14,8 @@ public class GoalGimmick : MonoBehaviour
     [SerializeField]
     private Animator anim;
 
+    private bool isGoalOpen;   // true なら開いている
+
 
     public IEnumerator PlayOpenDoor(PlayerNavigationController playerNavigationController) {
 
@@ -26,8 +28,10 @@ public class GoalGimmick : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
+        isGoalOpen = !isGoalOpen;
+
         // アニメ再生
-        anim.SetBool("Opened", true);
+        anim.SetBool("Opened", isGoalOpen);
 
         yield return new WaitForSeconds(2.0f);
 
@@ -40,7 +44,5 @@ public class GoalGimmick : MonoBehaviour
 
         // プレイヤーの移動制限解除
         playerNavigationController.CurrentPlayerState = PlayerState.Play;
-
     }
-
 }

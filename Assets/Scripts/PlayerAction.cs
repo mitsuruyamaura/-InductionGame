@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerAction : MonoBehaviour
 {
@@ -26,21 +27,32 @@ public class PlayerAction : MonoBehaviour
 
     void Update() {
         if (Input.GetMouseButtonDown(1)) {
-            HatAction();
+            HatAction(Input.mousePosition);
         }    
     }
 
     /// <summary>
     /// 帽子を飛ばす(ギミックを動かしたり、エネミーを攻撃できる)
     /// </summary>
-    private void HatAction() {
+    private void HatAction(Vector3 clickPos) {
         if (navigationController.CurrentPlayerState != PlayerState.Play) {
             return;
         }
         // 移動可否のオンオフ切り替え
         navigationController.CurrentPlayerState = PlayerState.Wait;
 
-        playerAnim.ChangeAnimationFromTrigger(PlayerAnimationState.Hit);
+        //Debug.Log(clickPos);
+
+        Ray ray = Camera.main.ScreenPointToRay(clickPos);
+
+        if (Physics.Raycast(ray.origin, ray.direction, out RaycastHit hit, 100)) {
+
+            // 向きをタップした方向に合わせる
+            transform.DOLookAt(hit.point, 0.25f).SetEase(Ease.InQuart).SetLink(gameObject);
+
+            // 帽子アクションアニメ再生
+            playerAnim.ChangeAnimationFromTrigger(PlayerAnimationState.Hit);
+        }
     }
 
     /// <summary>

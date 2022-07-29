@@ -24,10 +24,10 @@ public class ObstacleBase : MonoBehaviour
     }
 
     protected virtual void OnEnterObstacle() {
-        Debug.Log("On Enter");
+        //Debug.Log("On Enter Obstacle");
     }
 
     protected virtual void OnExitObstacle() {
-
+        //Debug.Log("On Exit Obstacle");
     }
 }

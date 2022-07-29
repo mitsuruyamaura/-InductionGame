@@ -36,6 +36,10 @@ public class PlayerNavigationController : MonoBehaviour
     }
 
 
+    public bool GetOnOffMeshLink() {
+        return agent.isOnOffMeshLink;
+    }
+
     void Start() {
         if (!TryGetComponent(out playerAnim)) {
             Debug.Log("PlayerAnimation ‚ğæ“¾o—ˆ‚Ü‚¹‚ñB");
@@ -94,6 +98,7 @@ public class PlayerNavigationController : MonoBehaviour
             }
             if (playerAnim.GetAnimator() != null && playerAnim.GetAnimator().GetCurrentAnimatorStateInfo(0).IsName("Jump")) {
                 playerAnim.ChangeAnimationBool(PlayerAnimationState.Jump, false);
+                //Debug.Log("OffMesh‚É‚æ‚éˆÚ“®I—¹");
             }
 
 

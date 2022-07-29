@@ -35,10 +35,18 @@ public class PlayerAction : MonoBehaviour
     /// 帽子を飛ばす(ギミックを動かしたり、エネミーを攻撃できる)
     /// </summary>
     private void HatAction(Vector3 clickPos) {
+        
+        // オフメッシュ移動によるジャンプ中は処理しない
+        if (navigationController.GetOnOffMeshLink()) {
+            return;
+        }
+
+        // 移動中以外は処理しない
         if (navigationController.CurrentPlayerState != PlayerState.Play) {
             return;
         }
-        // 移動可否のオンオフ切り替え
+
+        // 移動不可にする
         navigationController.CurrentPlayerState = PlayerState.Wait;
 
         //Debug.Log(clickPos);

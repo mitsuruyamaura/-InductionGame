@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum PlayerAnimationState {
     Speed,
-    Action,
+    Hit,
     Down,
     Clear,
     Idle,

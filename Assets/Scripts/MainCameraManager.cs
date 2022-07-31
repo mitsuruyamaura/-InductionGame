@@ -1,7 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using Cinemachine;
+using UnityEngine;
+
+
+public enum ViewState {
+    NormalView,
+    TopView,
+    FrontView,
+}
 
 public class MainCameraManager : MonoBehaviour
 {
@@ -12,6 +17,12 @@ public class MainCameraManager : MonoBehaviour
 
     public CinemachineVirtualCamera MainCamera { get => mainCamera; }
 
+    [SerializeField]
+    private CinemachineVirtualCamera[] cameraViews;
+
+    [SerializeField]
+    private int viewNo;
+
 
     void Awake() {
         if (instance == null) {
@@ -19,6 +30,21 @@ public class MainCameraManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         } else {
             Destroy(gameObject);
+        }
+    }
+
+    /// <summary>
+    /// ÉJÉÅÉâÇÃà íuïœçX
+    /// </summary>
+    public void ChangeView() {
+        viewNo = ++viewNo % cameraViews.Length;
+
+        for (int i = 0; i < cameraViews.Length; i++) {
+            if (i == viewNo) {
+                cameraViews[i].Priority = 10;
+            } else {
+                cameraViews[i].Priority = 5;
+            }
         }
     }
 }

@@ -9,8 +9,15 @@ public class SpikeObstacle : ObstacleBase
     [SerializeField]
     private Ease ease;
 
+    [SerializeField]
+    private bool isMoving;
+
     protected override void OnEnterObstacle() {
         base.OnEnterObstacle();
+
+        if (!isMoving) {
+            return;
+        }
 
         Sequence sequence = DOTween.Sequence(); 
         sequence.AppendInterval(1.5f);

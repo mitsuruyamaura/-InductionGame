@@ -11,8 +11,11 @@ public class EnemyCollider : MonoBehaviour
     }
 
 
-    private void OnCollisionEnter(Collision collision) {
-        if (collision.gameObject.TryGetComponent(out Hat hat)) {
+    private void OnTriggerEnter(Collider other) {
+        // –Xq‚É Rigidbody ‚ª‚È‚¢‚Ì‚ÅAColliderEnter ‚Å‚ÍÚG‚µ‚È‚¢
+        //Debug.Log("Collider Hit");
+
+        if (other.TryGetComponent(out Hat hat)) {
 
             // TODO
             Debug.Log("‹Câ");

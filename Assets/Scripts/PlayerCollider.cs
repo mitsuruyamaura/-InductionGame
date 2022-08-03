@@ -8,6 +8,7 @@ public class PlayerCollider : MonoBehaviour
     private PlayerAnimation playerAnim;
     private PlayerNavigationController navigationController;
     private CapsuleCollider capsuleCol;
+    private PlayerStock playerStock;  // TODO UniRx にしたら、あとでなくす
 
     [SerializeField]
     private Transform startTran;
@@ -26,6 +27,9 @@ public class PlayerCollider : MonoBehaviour
         }
         if (!TryGetComponent(out capsuleCol)) {
             Debug.Log("CapsuleCollider 取得出来ません。");
+        }
+        if (!TryGetComponent(out playerStock)) {
+            Debug.Log("PlayerStock 取得出来ません。");
         }
     }
 
@@ -60,6 +64,9 @@ public class PlayerCollider : MonoBehaviour
         navigationController.CurrentPlayerState = PlayerState.Down;
         playerAnim.ChangeAnimationBool(PlayerAnimationState.Down, true);
         StartCoroutine(Restart());
+
+        // TODO 残機数更新  障害物からもらうようにしてもいい
+        playerStock?.UpdateStocks(-1);
     }
 
     /// <summary>

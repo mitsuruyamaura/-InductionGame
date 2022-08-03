@@ -9,8 +9,11 @@ public class PlayerStock : MonoBehaviour
     [SerializeField]
     private int stocks;
 
+    private int maxStock;
+
     void Start()
     {
+        maxStock = stocks;
         if (!TryGetComponent(out uiPresenter)) {
             Debug.Log("UIPresenter を取得出来ません。");
             return;
@@ -18,10 +21,14 @@ public class PlayerStock : MonoBehaviour
         uiPresenter.PrepareDisplayPlayerStocks(stocks);
     }
 
-
+    /// <summary>
+    /// ストックの更新
+    /// </summary>
+    /// <param name="amount"></param>
     public void UpdateStocks(int amount) {
-        stocks += amount;
+        stocks = Mathf.Clamp(stocks += amount, 0, maxStock);
 
+        // 画面表示更新
         uiPresenter.PrepareDisplayPlayerStocks(stocks);
     }
 }

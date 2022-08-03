@@ -24,4 +24,3 @@ public class UIPresenter : MonoBehaviour
         uiManager.UpdateDisplayPlayerStocks(stocks);
     }
 }
-

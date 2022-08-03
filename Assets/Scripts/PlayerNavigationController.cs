@@ -58,9 +58,10 @@ public class PlayerNavigationController : MonoBehaviour
 
     void Update() {
         if (currentPlayerState != PlayerState.Play) {
-            agent.speed = 0;
-            playerAnim.MoveAnimation(0);
-            agent.ResetPath();
+            StopNavigation();
+            //agent.speed = 0;
+            //playerAnim.MoveAnimation(0);
+            //agent.ResetPath();
             return;
         }
 
@@ -72,9 +73,11 @@ public class PlayerNavigationController : MonoBehaviour
         // –Ú“I’n‚É‹ß‚Ã‚¢‚½‚ç
         if (Vector3.Distance(transform.position, destination) <= 0.15f) {
             // ’âŽ~‚³‚¹‚é
+            StopNavigation();
+
             //agent.speed = 0;
-            playerAnim.MoveAnimation(0);
-            agent.ResetPath();
+            //playerAnim.MoveAnimation(0);
+            //agent.ResetPath();
         }
     }
 
@@ -145,7 +148,7 @@ public class PlayerNavigationController : MonoBehaviour
             }
 
             // NavMesh ‚ÅˆÚ“®
-            NavigationMove(hit.point);
+            SetNavigation(hit.point);
             // –Ú“I’n‚ð“o˜^
             destination = hit.point;
         }
@@ -155,10 +158,19 @@ public class PlayerNavigationController : MonoBehaviour
     /// NavMesh ‚É‚æ‚éŒo˜HˆÚ“®‚ÆˆÚ“®ƒAƒjƒ“¯Šú
     /// </summary>
     /// <param name="movePos"></param>
-    private void NavigationMove(Vector3 movePos) {
+    private void SetNavigation(Vector3 movePos) {
         //Debug.Log(movePos);
         agent.speed = moveSpeed;
         agent.SetDestination(movePos);
         playerAnim.MoveAnimation(agent.speed);
+    }
+
+    /// <summary>
+    /// NavMesh ‚É‚æ‚éŒo˜HˆÚ“®‚ð’âŽ~
+    /// </summary>
+    private void StopNavigation() {
+        agent.speed = 0;
+        agent.ResetPath();
+        playerAnim.MoveAnimation(0);
     }
 }

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// プレイヤー用のキャラクターのアニメの種類
+/// </summary>
 public enum PlayerAnimationState {
     Speed,
     Hit,
@@ -23,21 +26,36 @@ public class PlayerAnimation : MonoBehaviour
         }        
     }
 
+    /// <summary>
+    /// 移動アニメの再生と停止
+    /// </summary>
+    /// <param name="speed"></param>
     public void MoveAnimation(float speed) {
         anim.SetFloat(PlayerAnimationState.Speed.ToString(), speed);
     }
 
+    /// <summary>
+    /// Bool パラメータのアニメの再生と停止
+    /// </summary>
+    /// <param name="nextAnimState"></param>
+    /// <param name="isChange"></param>
 
     public void ChangeAnimationBool(PlayerAnimationState nextAnimState, bool isChange) {
         anim.SetBool(nextAnimState.ToString(), isChange);
     }
 
-
+    /// <summary>
+    /// Trigger パラメータのアニメの再生
+    /// </summary>
+    /// <param name="nextAnimState"></param>
     public void ChangeAnimationFromTrigger(PlayerAnimationState nextAnimState) {
         anim.SetTrigger(nextAnimState.ToString());
     }
 
-
+    /// <summary>
+    /// Animator コンポーネントの取得用
+    /// </summary>
+    /// <returns></returns>
     public Animator GetAnimator() {
         return anim;
     }

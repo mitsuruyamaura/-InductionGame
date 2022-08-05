@@ -86,6 +86,7 @@ public class EnemyNavigationController : MonoBehaviour
 
         // ‚»‚êˆÈŠO(Move)‚ÍˆÚ“®
         agent.SetDestination(player.transform.position);
+        Debug.Log("ˆÚ“®");
     }
 
     /// <summary>
@@ -94,7 +95,8 @@ public class EnemyNavigationController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator ObserveAttack() {
         float timer = 0;
-        while(CurrentEnemyState == EnemyState.Attack) {
+        while(CurrentEnemyState == EnemyState.Attack && player) {
+            agent.SetDestination(player.transform.position);
             timer += Time.deltaTime;
             if (timer >= attackInterval) {
                 timer = 0;
@@ -102,6 +104,7 @@ public class EnemyNavigationController : MonoBehaviour
             }
             yield return null;
         }
+        StopNavigation();
         Debug.Log("UŒ‚I—¹");        
     }
 

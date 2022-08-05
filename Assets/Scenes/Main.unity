@@ -10733,6 +10733,11 @@ PrefabInstance:
       propertyPath: startTran
       value: 
       objectReference: {fileID: 332485117}
+    - target: {fileID: 4862204570954078403, guid: 5813fef60ff72cf43a30a3b9cf83ee7f,
+        type: 3}
+      propertyPath: attackInterval
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4862204571347208832, guid: 5813fef60ff72cf43a30a3b9cf83ee7f,
         type: 3}
       propertyPath: m_LocalPosition.z

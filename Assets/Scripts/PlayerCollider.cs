@@ -43,6 +43,11 @@ public class PlayerCollider : MonoBehaviour
             UnityAction action = GetReacion(obstacleBase.ObstacleType);
             action.Invoke();
         }
+
+        if (other.TryGetComponent(out EnemyWeapon enemyWeapon)) {
+            capsuleCol.enabled = false;
+            DownPlayer();
+        }
     }
 
     /// <summary>

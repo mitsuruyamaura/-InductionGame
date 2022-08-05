@@ -10750,6 +10750,63 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5813fef60ff72cf43a30a3b9cf83ee7f, type: 3}
+--- !u!1 &4862204570836233761 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4862925062506705440, guid: 5813fef60ff72cf43a30a3b9cf83ee7f,
+    type: 3}
+  m_PrefabInstance: {fileID: 4862204570836233760}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4862204570836233762 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4862204570954078403, guid: 5813fef60ff72cf43a30a3b9cf83ee7f,
+    type: 3}
+  m_PrefabInstance: {fileID: 4862204570836233760}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524144639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a3acbd9bfa884e419aea511772fe591, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4862204570836233763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524144639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdf77cc0a2ae25c418e64e4eac5ea0ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weaponCollider: {fileID: 4862204570836233764}
+--- !u!65 &4862204570836233764
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4862204570836233761}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.3621254, y: 36.70082, z: 4.907627}
+  m_Center: {x: -0.11826764, y: 40.385914, z: 0.1158936}
+--- !u!114 &4862204570836233765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4862204570836233761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8122feff565e364395cff89e61bb8b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navigationController: {fileID: 4862204570836233762}
 --- !u!1001 &7494743040406164929
 PrefabInstance:
   m_ObjectHideFlags: 0

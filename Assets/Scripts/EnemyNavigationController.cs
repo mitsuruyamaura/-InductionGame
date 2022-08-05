@@ -70,6 +70,11 @@ public class EnemyNavigationController : MonoBehaviour
             return;
         }
 
+        // ˆê’è‹——£‚É‹ß‚Ã‚¢‚½‚ç
+        if (player && Vector3.Distance(transform.position, player.transform.position) <= 2.0f) {
+            playerAnim.ChangeAnimationFromTrigger(PlayerAnimationState.Hit);
+        }
+
         // ƒ_ƒEƒ“’†‚©UŒ‚’†‚ÌŽž‚Íˆ—‚µ‚È‚¢
         if (CurrentEnemyState == EnemyState.Down || CurrentEnemyState == EnemyState.Attack) {
             return;

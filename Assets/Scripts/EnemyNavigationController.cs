@@ -27,6 +27,9 @@ public class EnemyNavigationController : MonoBehaviour
     [SerializeField]
     private Transform startTran;
 
+    [SerializeField]
+    private float attackInterval;
+
     private float timer;
     private float lookAroundInterval = 3.5f;
 
@@ -72,7 +75,8 @@ public class EnemyNavigationController : MonoBehaviour
 
         // ˆê’è‹——£‚É‹ß‚Ã‚¢‚½‚ç
         if (player && Vector3.Distance(transform.position, player.transform.position) <= 2.0f) {
-            playerAnim.ChangeAnimationFromTrigger(PlayerAnimationState.Hit);
+            CurrentEnemyState = EnemyState.Attack;
+            StartCoroutine(ObserveAttack());
         }
 
         // ƒ_ƒEƒ“’†‚©UŒ‚’†‚Ì‚Íˆ—‚µ‚È‚¢
@@ -82,6 +86,23 @@ public class EnemyNavigationController : MonoBehaviour
 
         // ‚»‚êˆÈŠO(Move)‚ÍˆÚ“®
         agent.SetDestination(player.transform.position);
+    }
+
+    /// <summary>
+    /// UŒ‚‚ÌŠÄ‹
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ObserveAttack() {
+        float timer = 0;
+        while(CurrentEnemyState == EnemyState.Attack) {
+            timer += Time.deltaTime;
+            if (timer >= attackInterval) {
+                timer = 0;
+                playerAnim.ChangeAnimationFromTrigger(PlayerAnimationState.Hit);
+            }
+            yield return null;
+        }
+        Debug.Log("UŒ‚I—¹");        
     }
 
     private void OnTriggerEnter(Collider other) {

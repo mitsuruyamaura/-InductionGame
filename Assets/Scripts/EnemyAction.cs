@@ -27,8 +27,5 @@ public class EnemyAction : MonoBehaviour
     public void SwitchCollider(int switchNo) {
         // 帽子のコライダーのオンオフ切り替え
         weaponCollider.enabled = switchNo == 1 ? true : false;
-
-        // 移動可否のオンオフ切り替え
-        navigationController.CurrentEnemyState = switchNo == 1 ? EnemyState.Attack : EnemyState.Idle;
     }
 }

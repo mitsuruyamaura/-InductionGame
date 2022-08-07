@@ -17,7 +17,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        btnChangeCameraRotate.onClick.AddListener(MainCameraManager.instance.ChangeView);
+        btnChangeCameraRotate.onClick.AddListener(MainCameraManager.instance.ChangeViewNo);
     }
 
     /// <summary>

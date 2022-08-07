@@ -6,34 +6,37 @@ using DG.Tweening;
 
 public class ClearManager : MonoBehaviour
 {
-    private CinemachineVirtualCamera clearCamera;
     private PlayerAnimation playerAnim;
-
-    [SerializeField]
-    private Transform clearPos;
 
 
     void Start()
     {
-        clearCamera = transform.GetComponentInChildren<CinemachineVirtualCamera>();
-        if (!clearCamera) {
-            Debug.Log("Camera 取得出来ません。");
-        }
-
         if (!TryGetComponent(out playerAnim)) {
             Debug.Log("PlayerAnimation 取得出来ません。");
         }
-
-        ClearCamera();
+        // デバッグ用
+        //StartCoroutine(PrepareClearOperationAsync());
     }
 
+    /// <summary>
+    /// クリアの準備
+    /// </summary>
+    public IEnumerator PrepareClearOperationAsync() {
+        // クリア視点のカメラをセット
+        MainCameraManager.instance.ClearCameraView();
 
-    public void ClearCamera() {
+        yield return new WaitForSeconds(1.5f);
 
-        clearCamera.Priority = 20;
+        // カメラのターゲット追従を停止
+        MainCameraManager.instance.CutFollowTarget();
 
-        //playerAnim.ChangeAnimationBool(PlayerAnimationState.Clear, true);
-
-        transform.DOLookAt(clearPos.position, 1.0f).SetEase(Ease.InQuart);
+        // カメラの方を向く
+        transform.DOLookAt(MainCameraManager.instance.GetClearCameraTran().position, 1.0f)
+            .SetEase(Ease.InQuart)
+            .OnComplete(() => 
+            {
+                // クリアアニメ再生
+                playerAnim.ChangeAnimationBool(PlayerAnimationState.Clear, true);
+            });
     }
 }

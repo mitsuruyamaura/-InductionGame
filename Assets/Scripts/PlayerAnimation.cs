@@ -41,6 +41,10 @@ public class PlayerAnimation : MonoBehaviour
     /// <param name="isChange"></param>
 
     public void ChangeAnimationBool(PlayerAnimationState nextAnimState, bool isChange) {
+        if (!TryGetComponent(out anim)) {
+            Debug.Log("Animator ‚ğæ“¾o—ˆ‚Ü‚¹‚ñ");
+        }
+        Debug.Log(nextAnimState);
         anim.SetBool(nextAnimState.ToString(), isChange);
     }
 

@@ -48,6 +48,16 @@ public class PlayerCollider : MonoBehaviour
             capsuleCol.enabled = false;
             DownPlayer();
         }
+
+        if (other.TryGetComponent(out GoalPoint goalPoint)) {
+            if (TryGetComponent(out ClearManager clearManager)) {
+                // ˆÚ“®§Œä
+                navigationController.CurrentPlayerState = PlayerState.GameUp;
+
+                // ƒNƒŠƒA‚Ì€”õ
+                StartCoroutine(clearManager.PrepareClearOperationAsync());
+            }
+        }
     }
 
     /// <summary>

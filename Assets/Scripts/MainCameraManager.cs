@@ -26,6 +26,8 @@ public class MainCameraManager : MonoBehaviour
     [SerializeField]
     private CinemachineVirtualCamera clearCamera;
 
+    private CameraUIManagaer cameraUIManagaer;
+
 
     void Awake() {
         if (instance == null) {
@@ -34,6 +36,9 @@ public class MainCameraManager : MonoBehaviour
         } else {
             Destroy(gameObject);
         }
+
+        cameraUIManagaer = transform.GetComponentInChildren<CameraUIManagaer>();
+        Debug.Log(cameraUIManagaer);
     }
 
     /// <summary>
@@ -60,7 +65,9 @@ public class MainCameraManager : MonoBehaviour
     /// <summary>
     /// クリア時のカメラ視点
     /// </summary>
-    public void ClearCameraView() {       
+    public void ClearCameraView() {
+        // フレームイン
+        cameraUIManagaer.FrameInCameraFrames();
         clearCamera.Priority = 15;
         Debug.Log("Clear Camera セット");
     }
@@ -70,7 +77,9 @@ public class MainCameraManager : MonoBehaviour
         return clearCamera.transform;
     }
 
-
+    /// <summary>
+    /// Follow を外す(LoolAt 時のカメラのブレを防ぐ)
+    /// </summary>
     public void CutFollowTarget() {
         clearCamera.m_Follow = null;
     }

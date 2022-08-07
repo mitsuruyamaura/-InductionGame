@@ -26,7 +26,7 @@ public class CameraUIManagaer : MonoBehaviour
         }
 
         // デバッグ
-        StartCoroutine(DebugCameraFrame());
+        //StartCoroutine(DebugCameraFrame());
     }
 
     /// <summary>
@@ -47,6 +47,7 @@ public class CameraUIManagaer : MonoBehaviour
     public void FrameInCameraFrames() {
         imgCameraFrames[0].transform.DOLocalMoveY(-cameraFramePos, defaultDuration).SetEase(Ease.Linear).SetRelative();
         imgCameraFrames[1].transform.DOLocalMoveY(cameraFramePos, defaultDuration).SetEase(Ease.Linear).SetRelative();
+        Debug.Log("frame in");
     }
 
     /// <summary>
@@ -56,5 +57,6 @@ public class CameraUIManagaer : MonoBehaviour
         for (int i = 0; i < imgCameraFrames.Length; i++) {
             imgCameraFrames[i].transform.DOLocalMoveY(defaultCameraFramePoss[i], defaultDuration).SetEase(Ease.Linear).SetRelative();
         }
+        Debug.Log("frame out");
     }
 }

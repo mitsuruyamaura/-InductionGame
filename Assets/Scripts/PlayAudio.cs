@@ -9,7 +9,7 @@ public class PlayAudio : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1")) {
+        if (Input.GetButtonDown("Fire2")) {
             myAudio.Play();
         }
     }

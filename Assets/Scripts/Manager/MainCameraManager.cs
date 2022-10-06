@@ -8,7 +8,7 @@ public enum ViewState {
     FrontView,
 }
 
-public class MainCameraManager : MonoBehaviour
+public class MainCameraManager : MonoBehaviour, IEntryRun
 {
     public static MainCameraManager instance;
 
@@ -28,8 +28,12 @@ public class MainCameraManager : MonoBehaviour
 
     private CameraUIManagaer cameraUIManagaer;
 
-
-    void Awake() {
+    /// <summary>
+    /// EntryPoint より実行
+    /// Start の代わりに Awake タイミングで初期設定
+    /// CameraUIManager よりも前のタイミングで実行しておく
+    /// </summary>
+    public void EntryRun() {
         if (instance == null) {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -38,8 +42,20 @@ public class MainCameraManager : MonoBehaviour
         }
 
         cameraUIManagaer = transform.GetComponentInChildren<CameraUIManagaer>();
-        Debug.Log(cameraUIManagaer);
+        Debug.Log(cameraUIManagaer + " 取得");
     }
+
+    //void Awake() {
+    //    if (instance == null) {
+    //        instance = this;
+    //        DontDestroyOnLoad(gameObject);
+    //    } else {
+    //        Destroy(gameObject);
+    //    }
+
+    //    cameraUIManagaer = transform.GetComponentInChildren<CameraUIManagaer>();
+    //    Debug.Log(cameraUIManagaer);
+    //}
 
     /// <summary>
     /// カメラの位置変更

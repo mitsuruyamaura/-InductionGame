@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class CameraUIManagaer : MonoBehaviour
+public class CameraUIManagaer : MonoBehaviour, IEntryRun
 {
     [SerializeField]
     private Image[] imgCameraFrames;
@@ -19,21 +19,34 @@ public class CameraUIManagaer : MonoBehaviour
     private float[] defaultCameraFramePoss;
 
 
-    void Start() {
+    /// <summary>
+    /// EntryPoint より実行
+    /// Start の代わりに Awake タイミングで初期設定
+    /// </summary>
+    public void EntryRun() {
         defaultCameraFramePoss = new float[imgCameraFrames.Length];
         for (int i = 0; i < imgCameraFrames.Length; i++) {
             defaultCameraFramePoss[i] = imgCameraFrames[i].rectTransform.anchoredPosition.y;// アンカー設定しているので、ローカル座標もダメ
         }
-
         // デバッグ
         //StartCoroutine(DebugCameraFrame());
     }
+
+    //void Start() {
+    //    defaultCameraFramePoss = new float[imgCameraFrames.Length];
+    //    for (int i = 0; i < imgCameraFrames.Length; i++) {
+    //        defaultCameraFramePoss[i] = imgCameraFrames[i].rectTransform.anchoredPosition.y;// アンカー設定しているので、ローカル座標もダメ
+    //    }
+
+    //    // デバッグ
+    //    //StartCoroutine(DebugCameraFrame());
+    //}
 
     /// <summary>
     /// カメラフレームのデバッグ
     /// </summary>
     /// <returns></returns>
-    private IEnumerator DebugCameraFrame() {
+    IEnumerator DebugCameraFrame() {
         FrameInCameraFrames();
 
         yield return new WaitForSeconds(2.0f);

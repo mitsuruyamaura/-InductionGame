@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class UIManager : MonoBehaviour
+public class UIManager : MonoBehaviour, IEntryRun
 {
     [SerializeField]
     private Button btnChangeCameraRotate;
@@ -15,10 +15,20 @@ public class UIManager : MonoBehaviour
     private int beforeStocks;
 
 
-    void Start()
-    {
+    /// <summary>
+    /// EntryPoint より実行
+    /// Start の代わりに Awake タイミングで初期設定
+    /// </summary>
+    public void EntryRun() {
         btnChangeCameraRotate.onClick.AddListener(MainCameraManager.instance.ChangeViewNo);
+
+        Debug.Log("UIManager 設定");
     }
+
+    //void Start()
+    //{
+    //    btnChangeCameraRotate.onClick.AddListener(MainCameraManager.instance.ChangeViewNo);
+    //}
 
     /// <summary>
     /// PlayerStock 数の表示更新

@@ -15,6 +15,7 @@ public enum PlayerAnimationState {
 
 }
 
+[RequireComponent(typeof(Animator))]
 public class PlayerAnimation : MonoBehaviour
 {
     private Animator anim;

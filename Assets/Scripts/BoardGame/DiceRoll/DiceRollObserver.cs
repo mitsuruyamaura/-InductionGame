@@ -13,7 +13,7 @@ namespace yamap_BoardGame {
 
         public void RollDice(int max) {
             //this.OnDiceRolledObservable.OnNext(Random.Range(0, max));
-            DiceRoll.Value = Random.Range(0, max);
+            DiceRoll.Value = Random.Range(1, max);
         }
 
 

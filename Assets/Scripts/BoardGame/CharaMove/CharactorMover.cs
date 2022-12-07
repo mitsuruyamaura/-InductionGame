@@ -167,7 +167,8 @@ namespace yamap_BoardGame {
             // モデルの初期アングルによって値を変更すること。ここでは 90 の角度で正面方向を進むようにしているケース
             return nextDirectionType switch {
                 DirectionType.Front => 90,
-                DirectionType.Right => -90,
+                DirectionType.Back => -90,
+                DirectionType.Right => 180,
                 DirectionType.Left =>  0,
                 _ => 0
             };

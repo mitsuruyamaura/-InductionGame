@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace yamap_BoardGame {
 
-    public class Chara : MonoBehaviour {
+    public class Charactor : MonoBehaviour {
 
         public int placeNo;
     }

@@ -14,8 +14,11 @@ using Cysharp.Threading.Tasks;
 
 namespace yamap_BoardGame {
 
-    [RequireComponent(typeof(Chara))]
-    public class CharactorRenderer : MonoBehaviour {
+    [RequireComponent(typeof(Charactor))]
+    [RequireComponent(typeof(PlayerAnimation))]
+    public class CharactorMover : MonoBehaviour {
+
+        // インスタンシエイトした場合には、メソッドを利用して外部からもらう
 
         [SerializeField]
         private DiceRollObserver diceRollObserver;
@@ -24,7 +27,7 @@ namespace yamap_BoardGame {
         private Field field;
 
         private PlayerAnimation playerAnimation;
-        private Chara chara;
+        private Charactor chara;
         private float walkAnimSpeed = 0.5f;
 
 
@@ -33,19 +36,35 @@ namespace yamap_BoardGame {
                 playerAnimation.MoveAnimation(0);
             }
 
-            TryGetComponent(out chara);
-            diceRollObserver.DiceRoll.Subscribe(value => MoveAsync(value).Forget()).AddTo(this);
+            if(TryGetComponent(out chara)) {
+                chara.placeNo = 0;
+            }
+
+            diceRollObserver?.DiceRoll.Subscribe(value => MoveAsync(value).Forget()).AddTo(this);
         }
 
+        /// <summary>
+        /// キャラの移動
+        /// </summary>
+        /// <param name="moveConut"></param>
+        /// <returns></returns>
+        private async UniTask MoveAsync(int moveConut) {   // 0 の出目もあり。その場合は移動しない
 
-        private async UniTask MoveAsync(int moveConut) {
+            Debug.Log(moveConut);
+            if (moveConut == 0) {
+                return;
+            }
+
+            // TODO 分岐パネルにいる場合には、最初に移動する方向を選択する　await すること
+
+
             playerAnimation.MoveAnimation(walkAnimSpeed);
 
             DOTweenList dotweenList = new ();
             
             Sequence sequence = DOTween.Sequence();
 
-            for (int i = 1; i <= moveConut + 1; i++) {
+            for (int i = 1; i <= moveConut; i++) {
 
                 int nextPlace = i + chara.placeNo;
                 if (nextPlace >= field.panels.Length) {
@@ -54,7 +73,7 @@ namespace yamap_BoardGame {
 
                 Vector3 nextPos = field.panels[nextPlace].transform.localPosition;
 
-                dotweenList.Add(AppendMove(sequence, nextPos));
+                dotweenList.Add(AppendMove(sequence, nextPos, field.panels[nextPlace].directionType));
 
                 //await AppendMoveAsync(sequence, nextPos);
 
@@ -65,6 +84,7 @@ namespace yamap_BoardGame {
                 //       ChangeDirection(chara.placeNo);
                 //   });
             }
+            // List の処理がすべて終了するまで待機。Sequence にしてあるので、順番に処理される
             await dotweenList.PlayForward();
 
             //await sequence.AppendInterval((moveConut - 1) * 0.3f)
@@ -78,17 +98,16 @@ namespace yamap_BoardGame {
             Debug.Log("移動終了");
         }
 
-
         /// <summary>
-        /// キャラの移動処理用
+        /// キャラの移動処理用。未使用
         /// </summary>
         /// <param name="sequence"></param>
         /// <param name="newPos"></param>
-        private async UniTask AppendMoveAsync(Sequence sequence, Vector3 newPos) {
+        private async UniTask AppendMoveAsync(Sequence sequence, Vector3 newPos, DirectionType newDirectionType) {
            await sequence.Append(transform.DOLocalMove(newPos, 0.5f).SetEase(Ease.InQuart)  // ←　ここでさらに ) して閉じないこと。その場合、OnComplete が最後にしか呼ばれなくなる
                 .OnComplete(() => {
                      chara.placeNo = GetNewPlaceNo(chara.placeNo);
-                     ChangeDirection(chara.placeNo);
+                     ChangeDirection(newDirectionType);
                      Debug.Log(chara.placeNo);
                  }));
         }
@@ -98,12 +117,17 @@ namespace yamap_BoardGame {
         /// </summary>
         /// <param name="newPos"></param>
         /// <returns></returns>
-        private Tween AppendMove(Sequence sequence, Vector3 newPos) {
+        private Tween AppendMove(Sequence sequence, Vector3 newPos, DirectionType newDirectionType) {
             return sequence.Append(transform.DOLocalMove(newPos, 0.5f).SetEase(Ease.InQuart)  // ←　ここでさらに ) して閉じないこと。その場合、OnComplete が最後にしか呼ばれなくなる
                  .OnComplete(() => {
                      chara.placeNo = GetNewPlaceNo(chara.placeNo);
-                     ChangeDirection(chara.placeNo);
                      Debug.Log(chara.placeNo);
+
+                     // キャラの向きを進行に合わせる
+                     ChangeDirection(newDirectionType);
+
+                     // TODO イベント
+
                  }));
         }
 
@@ -127,8 +151,26 @@ namespace yamap_BoardGame {
         /// キャラの向きの更新
         /// </summary>
         /// <param name="placeNo"></param>
-        private void ChangeDirection(int placeNo) {
+        private void ChangeDirection(DirectionType nextDirectionType) {
+            if (nextDirectionType == DirectionType.None) {
+                return;
+            }
+            transform.DORotate(new(transform.position.x, GetRotateAngle(nextDirectionType), transform.position.z), 0.5f).SetEase(Ease.Linear);
+        }
 
+        /// <summary>
+        /// キャラの向きを進行方向に合わせる
+        /// </summary>
+        /// <param name="nextDirectionType"></param>
+        /// <returns></returns>
+        private float GetRotateAngle(DirectionType nextDirectionType) {
+            // モデルの初期アングルによって値を変更すること。ここでは 90 の角度で正面方向を進むようにしているケース
+            return nextDirectionType switch {
+                DirectionType.Front => 90,
+                DirectionType.Right => -90,
+                DirectionType.Left =>  0,
+                _ => 0
+            };
         }
     }
 }

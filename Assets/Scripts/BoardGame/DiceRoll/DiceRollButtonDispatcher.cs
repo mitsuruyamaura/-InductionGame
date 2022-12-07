@@ -6,24 +6,22 @@ using UniRx;
 
 namespace yamap_BoardGame {
 
-    public class RollDiceButtonDispatcher : MonoBehaviour {
+    [RequireComponent(typeof(Button))]
+    public class DiceRollButtonDispatcher : MonoBehaviour {
 
-        private Button btnRollDice;
+        /// <summary>
+        /// ダイスを振るイベントを駆動
+        /// </summary>
+        /// <param name="maxDice"></param>
+        public void DispatchRollButton(int maxDice, DiceRollObserver diceRollObserver) {
 
-        [SerializeField]
-        private DiceRollObserver diceRollObserver;
-
-        [SerializeField]
-        private int maxDice = 6;
-
-
-        void Start() {
             if (TryGetComponent(out Button btnRollDice)) {
+                // ボタンの購読。ここからダイスを振るイベントを起動する
                 btnRollDice.OnClickAsObservable()
                     .ThrottleFirst(System.TimeSpan.FromSeconds(1.0f))
                     .Subscribe(_ => diceRollObserver.RollDice(maxDice))
                     .AddTo(this);
-            }
+            }            
         }
     }
 }

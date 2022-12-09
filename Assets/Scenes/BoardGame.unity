@@ -6283,6 +6283,7 @@ MonoBehaviour:
     type: 3}
   opponentMarkerPrefab: {fileID: 5495651279197195469, guid: d1fab2b6292ccee41b0ac78c5ec6707c,
     type: 3}
+  ease: 27
 --- !u!4 &959971179
 Transform:
   m_ObjectHideFlags: 0

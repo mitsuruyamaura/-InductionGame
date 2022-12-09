@@ -32,6 +32,12 @@ public class PlayerAnimation : MonoBehaviour
     /// </summary>
     /// <param name="speed"></param>
     public void MoveAnimation(float speed) {
+        if (anim == null) {
+            if (!TryGetComponent(out anim)) {
+                Debug.Log("Animator ‚ğæ“¾o—ˆ‚Ü‚¹‚ñ");
+                return;
+            }
+        }
         anim.SetFloat(PlayerAnimationState.Speed.ToString(), speed);
     }
 

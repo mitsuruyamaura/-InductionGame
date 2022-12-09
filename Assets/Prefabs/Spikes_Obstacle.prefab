@@ -127,4 +127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e68a77ba0e0dad343ab25d88af6f722f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  obstacleType: 0
   ease: 6
+  isMoving: 0

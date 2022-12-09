@@ -37,7 +37,7 @@ namespace yamap_BoardGame {
         public Charactor Chara { get => chara; }
 
 
-        void Start() {
+        public void SetUp() {
             if (TryGetComponent(out playerAnimation)) {
                 playerAnimation.MoveAnimation(0);
             }
@@ -66,11 +66,12 @@ namespace yamap_BoardGame {
         /// </summary>
         /// <param name="moveConut"></param>
         /// <returns></returns>
-        public async UniTask MoveAsync(int moveConut, CancellationToken token, EventChecker eventChecker, DiceRollObserver diceRollObserver, Field field) {   // 0 の出目もあり。その場合は移動しない
+        public async UniTask<Panel> MoveAsync(int moveConut, CancellationToken token, EventChecker eventChecker, DiceRollObserver diceRollObserver, Field field) {   // 0 の出目もあり。その場合は移動しない
 
             Debug.Log(moveConut);
             if (moveConut == 0) {
-                return;
+                // 自分のパネルの場合には増産できるようにする
+                return field.panels[chara.placeNo];
             }
 
             //// 自分のターン終了
@@ -115,20 +116,22 @@ namespace yamap_BoardGame {
             
             playerAnimation.MoveAnimation(0);
 
-            // イベント判定(マーカー作成と Hp 減少)
-            Marker marker = await eventChecker.CheckEventAsync(chara, field.panels[chara.placeNo]);
+            //// イベント判定(マーカー作成と Hp 減少)
+            //Marker marker = await eventChecker.CheckEventAsync(chara, field.panels[chara.placeNo]);
 
-            if (marker != null) {               
-                field.panels[chara.placeNo].markerList.Add(marker);
-            }
+            //if (marker != null) {               
+            //    field.panels[chara.placeNo].markerList.Add(marker);
+            //}
 
-            await UniTask.Delay(1500, cancellationToken: token);
+            //await UniTask.Delay(1500, cancellationToken: token);
 
 
             //opponent.IsMyTurn.Value = true;
 
 
             Debug.Log("移動終了");
+
+            return field.panels[chara.placeNo];
 
             // 敵のターンの終了まで待機
             //await UniTask.WaitUntil(() => opponent.IsMyTurn.Value == false, cancellationToken: token);

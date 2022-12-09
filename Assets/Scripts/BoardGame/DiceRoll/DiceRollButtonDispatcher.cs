@@ -13,15 +13,19 @@ namespace yamap_BoardGame {
         /// ダイスを振るイベントを駆動
         /// </summary>
         /// <param name="maxDice"></param>
-        public void DispatchRollButton(int maxDice, DiceRollObserver diceRollObserver) {
+        public Button DispatchRollButton(int maxDice, DiceRollObserver diceRollObserver) {
 
             if (TryGetComponent(out Button btnRollDice)) {
                 // ボタンの購読。ここからダイスを振るイベントを起動する
                 btnRollDice.OnClickAsObservable()
+                    // TODO HP かステートの確認を入れる
                     .ThrottleFirst(System.TimeSpan.FromSeconds(1.0f))
                     .Subscribe(_ => diceRollObserver.RollDice(maxDice))
                     .AddTo(this);
-            }            
+                return btnRollDice;
+            } else {
+                return null;
+            }
         }
     }
 }

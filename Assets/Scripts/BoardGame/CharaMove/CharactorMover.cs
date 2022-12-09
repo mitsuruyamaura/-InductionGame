@@ -4,6 +4,7 @@ using UnityEngine;
 using UniRx;
 using DG.Tweening;
 using Cysharp.Threading.Tasks;
+using System.Threading;
 
 
 // DOTweenList
@@ -20,15 +21,20 @@ namespace yamap_BoardGame {
 
         // インスタンシエイトした場合には、メソッドを利用して外部からもらう
 
-        [SerializeField]
-        private DiceRollObserver diceRollObserver;
+        //[SerializeField]
+        //private DiceRollObserver diceRollObserver;
 
-        [SerializeField]
-        private Field field;
+        //[SerializeField]
+        //private Field field;
 
         private PlayerAnimation playerAnimation;
-        private Charactor chara;
+        private Charactor chara;    // Player のときと Opponent のときはアサインを逆にする
         private float walkAnimSpeed = 0.5f;
+
+        //[SerializeField]
+        //private Charactor opponent;
+
+        public Charactor Chara { get => chara; }
 
 
         void Start() {
@@ -40,7 +46,19 @@ namespace yamap_BoardGame {
                 chara.placeNo = 0;
             }
 
-            diceRollObserver?.DiceRoll.Subscribe(value => MoveAsync(value).Forget()).AddTo(this);
+            //chara.IsMyTurn.Value = chara.ownerType == OwnerType.Player ? true : false;
+            //opponent.IsMyTurn.Value = opponent.ownerType == OwnerType.Opponent ? false : true;
+
+            //diceRollObserver?.DiceRoll
+            //    .Where(_ => chara.IsMyTurn.Value == true)
+            //    .Subscribe(value => MoveAsync(value, this.GetCancellationTokenOnDestroy()).Forget()).AddTo(this);
+
+            //// 敵の場合
+            //if (chara.ownerType == OwnerType.Opponent) {
+            //    opponent.IsMyTurn.Where(x => x == true)
+            //        .Subscribe(_ => diceRollObserver.RollDice(6))
+            //        .AddTo(this);
+            //}
         }
 
         /// <summary>
@@ -48,12 +66,16 @@ namespace yamap_BoardGame {
         /// </summary>
         /// <param name="moveConut"></param>
         /// <returns></returns>
-        private async UniTask MoveAsync(int moveConut) {   // 0 の出目もあり。その場合は移動しない
+        public async UniTask MoveAsync(int moveConut, CancellationToken token, EventChecker eventChecker, DiceRollObserver diceRollObserver, Field field) {   // 0 の出目もあり。その場合は移動しない
 
             Debug.Log(moveConut);
             if (moveConut == 0) {
                 return;
             }
+
+            //// 自分のターン終了
+            //chara.IsMyTurn.Value = false;
+
 
             // TODO 分岐パネルにいる場合には、最初に移動する方向を選択する　await すること
 
@@ -73,7 +95,7 @@ namespace yamap_BoardGame {
 
                 Vector3 nextPos = field.panels[nextPlace].transform.localPosition;
 
-                dotweenList.Add(AppendMove(sequence, nextPos, field.panels[nextPlace].directionType));
+                dotweenList.Add(AppendMove(sequence, nextPos, field.panels[nextPlace].directionType, field.panels.Length));
 
                 //await AppendMoveAsync(sequence, nextPos);
 
@@ -93,9 +115,28 @@ namespace yamap_BoardGame {
             
             playerAnimation.MoveAnimation(0);
 
-            // ボタンを再度押せるようにする
+            // イベント判定(マーカー作成と Hp 減少)
+            Marker marker = await eventChecker.CheckEventAsync(chara, field.panels[chara.placeNo]);
+
+            if (marker != null) {               
+                field.panels[chara.placeNo].markerList.Add(marker);
+            }
+
+            await UniTask.Delay(1500, cancellationToken: token);
+
+
+            //opponent.IsMyTurn.Value = true;
+
 
             Debug.Log("移動終了");
+
+            // 敵のターンの終了まで待機
+            //await UniTask.WaitUntil(() => opponent.IsMyTurn.Value == false, cancellationToken: token);
+
+            // ボタンを再度押せるようにする
+
+
+            //Debug.Log("プレイヤーのターン開始");
         }
 
         /// <summary>
@@ -103,10 +144,10 @@ namespace yamap_BoardGame {
         /// </summary>
         /// <param name="sequence"></param>
         /// <param name="newPos"></param>
-        private async UniTask AppendMoveAsync(Sequence sequence, Vector3 newPos, DirectionType newDirectionType) {
+        private async UniTask AppendMoveAsync(Sequence sequence, Vector3 newPos, DirectionType newDirectionType, int fieldCount) {
            await sequence.Append(transform.DOLocalMove(newPos, 0.5f).SetEase(Ease.InQuart)  // ←　ここでさらに ) して閉じないこと。その場合、OnComplete が最後にしか呼ばれなくなる
                 .OnComplete(() => {
-                     chara.placeNo = GetNewPlaceNo(chara.placeNo);
+                     chara.placeNo = GetNewPlaceNo(chara.placeNo, fieldCount);
                      ChangeDirection(newDirectionType);
                      Debug.Log(chara.placeNo);
                  }));
@@ -117,10 +158,10 @@ namespace yamap_BoardGame {
         /// </summary>
         /// <param name="newPos"></param>
         /// <returns></returns>
-        private Tween AppendMove(Sequence sequence, Vector3 newPos, DirectionType newDirectionType) {
+        private Tween AppendMove(Sequence sequence, Vector3 newPos, DirectionType newDirectionType, int fieldCount) {
             return sequence.Append(transform.DOLocalMove(newPos, 0.5f).SetEase(Ease.InQuart)  // ←　ここでさらに ) して閉じないこと。その場合、OnComplete が最後にしか呼ばれなくなる
                  .OnComplete(() => {
-                     chara.placeNo = GetNewPlaceNo(chara.placeNo);
+                     chara.placeNo = GetNewPlaceNo(chara.placeNo, fieldCount);
                      Debug.Log(chara.placeNo);
 
                      // キャラの向きを進行に合わせる
@@ -136,10 +177,10 @@ namespace yamap_BoardGame {
         /// </summary>
         /// <param name="placeNo"></param>
         /// <returns></returns>
-        private int GetNewPlaceNo(int placeNo) {
+        private int GetNewPlaceNo(int placeNo, int fieldCount) {
             int newPlaceNo = placeNo;
 
-            if (field.panels.Length - 1 != placeNo) {
+            if (fieldCount - 1 != placeNo) {
                 newPlaceNo++;
             } else {
                 newPlaceNo = 0;

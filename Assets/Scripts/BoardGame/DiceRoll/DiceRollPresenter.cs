@@ -34,6 +34,9 @@ namespace yamap_BoardGame {
         [SerializeField]
         private GameStateModel gameStateModel;
 
+        [SerializeField]
+        private CameraManager cameraManager;
+
 
         private DiceRollObserver diceRollObserver;
 
@@ -70,11 +73,13 @@ namespace yamap_BoardGame {
                     await eventChecker.CheckEventAsync(player.Chara, movedStopPanel);
 
                     await UniTask.Delay(500, cancellationToken: token);
-                    player.Chara.IsMyTurn.Value = false;
-                                    
+                    
+
                     //Debug.Log("opponent.Chara.IsMyTurn.Value : " + opponent.Chara.IsMyTurn.Value);
                     // ÉJÉÅÉâ
-
+                    cameraManager.SwitchCharaCamera((int)opponent.Chara.ownerType);
+                    await UniTask.Delay(250, cancellationToken: token);
+                    player.Chara.IsMyTurn.Value = false;
                 })
                 .AddTo(this);
 
@@ -88,10 +93,12 @@ namespace yamap_BoardGame {
                     await eventChecker.CheckEventAsync(opponent.Chara, movedStopPanel);
 
                     await UniTask.Delay(500, cancellationToken: token);
-                    opponent.Chara.IsMyTurn.Value = false;
+                    
 
                     // ÉJÉÅÉâ
-                    
+                    cameraManager.SwitchCharaCamera((int)player.Chara.ownerType);
+                    await UniTask.Delay(250, cancellationToken: token);
+                    opponent.Chara.IsMyTurn.Value = false;
                 })
                 .AddTo(this);
 

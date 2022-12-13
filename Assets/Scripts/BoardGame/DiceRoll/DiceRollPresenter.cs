@@ -31,6 +31,10 @@ namespace yamap_BoardGame {
         [SerializeField]
         private EventChecker eventChecker;
 
+        [SerializeField]
+        private GameStateModel gameStateModel;
+
+
         private DiceRollObserver diceRollObserver;
 
 
@@ -39,6 +43,7 @@ namespace yamap_BoardGame {
 
             TryGetComponent(out diceRollObserver);
             diceRollViewer.InitViewer();
+            gameStateModel.CurrentGameState.Value = GameState.Wait;
 
             // ボタンのイベント購読
             Button btn = rollDiceDispatcher.DispatchRollButton(maxDice, diceRollObserver);
@@ -102,12 +107,12 @@ namespace yamap_BoardGame {
             // HP の購読
             player.Chara.Hp
                 .Where(value => value <= 0)
-                .Subscribe(_ => Debug.Log("Failed..."))
+                .Subscribe(_ => gameStateModel.CurrentGameState.Value = GameState.GameOver)　　　// Debug.Log("Failed...")
                 .AddTo(this);
 
             opponent.Chara.Hp
                 .Where(value => value <= 0)
-                .Subscribe(_ => Debug.Log("Game Clear!"))
+                .Subscribe(_ => gameStateModel.CurrentGameState.Value = GameState.Clear)    // Debug.Log("Game Clear!")
                 .AddTo(this);
 
             // ここで設定しないと敵がすぐに購読して勝手に動いてしまう
@@ -133,8 +138,6 @@ namespace yamap_BoardGame {
                 .Subscribe(async _ => {
                     if (opponent.Chara.Hp.Value <= 0) {
                         Debug.Log("Game Clear!");
-                        // カメラをプレーヤーのカメラに変えて、勝利演出
-
                     } else {
                         await UniTask.Delay(500, cancellationToken: token);
                         player.Chara.IsMyTurn.Value = true;
@@ -143,6 +146,18 @@ namespace yamap_BoardGame {
                     }
                 })
                 .AddTo(this);
+
+            // State 購読
+            gameStateModel.CurrentGameState
+                .Where(state => state == GameState.Clear)
+                .Subscribe(_ => Debug.Log("ゲームクリア演出")).AddTo(this);  // カメラをプレーヤーのカメラに変えて、勝利演出
+
+            gameStateModel.CurrentGameState
+                .Where(state => state == GameState.GameOver)
+                .Subscribe(_ => Debug.Log("ゲームオーバー演出")).AddTo(this);
+
+
+            gameStateModel.CurrentGameState.Value = GameState.Play;
         }
     }
 }

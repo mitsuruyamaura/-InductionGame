@@ -16,5 +16,22 @@ namespace yamap_BoardGame {
 
         // 陣地
         public List<Marker> markerList = new();
+
+        public int[] itemIds;
+
+        /// <summary>
+        /// すべてのマーカーを取り除く
+        /// </summary>
+        public void RemoveMarkers() {
+            for (int i = 0; i < markerList.Count; i++) {
+                Destroy(markerList[i].gameObject);
+            }
+            markerList.Clear();
+        }
+
+
+        public int GetRandomItemIds() {
+            return itemIds[Random.Range(0, itemIds.Length)];
+        }
     }
 }

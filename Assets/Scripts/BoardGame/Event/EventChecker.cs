@@ -20,6 +20,7 @@ namespace yamap_BoardGame {
             if (panel.markerList.Count == 0) {
                 panel.markerList.Add(markerFactory.GenerateMarker(chara.ownerType, panel, panel.markerList.Count));
                 Debug.Log("新規作成");
+                ItemManager.instance.AddItem(chara.ownerType, panel.GetRandomItemIds());
                 return;
             } 
                 
@@ -28,6 +29,7 @@ namespace yamap_BoardGame {
                 // 増産
                 panel.markerList.Add(markerFactory.GenerateMarker(chara.ownerType, panel, panel.markerList.Count));
                 Debug.Log("増産");
+                ItemManager.instance.AddItem(chara.ownerType, panel.GetRandomItemIds());
                 return;
             }
 
@@ -35,6 +37,12 @@ namespace yamap_BoardGame {
             chara.Hp.Value -= panel.markerList.Count;
             Debug.Log(chara.ownerType + " 残りHP : " + chara.Hp.Value);
 
+            // アイテムをランダムで破棄
+            ItemManager.instance.RemoveItems(chara.ownerType, panel.markerList.Count);
+
+            // マーカーを破棄
+            panel.RemoveMarkers();
+            
             await UniTask.Yield();
         }
     }

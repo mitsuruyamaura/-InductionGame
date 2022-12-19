@@ -41,15 +41,21 @@ namespace yamap_BoardGame {
 
             // ç≈ëÂêîÇí¥Ç¶Ç»Ç¢ÇÊÇ§Ç…êßå¿
             if (ownerType == OwnerType.Player) {
-                count = Mathf.Max(0, playerItemList.Count);
+                count = Mathf.Min(count, playerItemList.Count);
 
-                for (int i = 0; i < count; i++) {
-                    playerItemList.Remove(playerItemList[i]);
+                for (int i = count - 1; i >= 0; i--) {
+                    playerItemList.RemoveAt(i);
                 }
+
+                //for (int i = list.Count - 1; i >= 0; i--) {
+                //    if (list[i].Taste == Taste.Bad) {
+                //        list.RemoveAt(i); // Remove(list[i])ÇÕégÇÌÇ»Ç¢éñÅB
+                //    }
+                //}
             } else {
-                count = Mathf.Max(0, opponentItemList.Count);
-                for (int i = 0; i < count; i++) {
-                    opponentItemList.Remove(opponentItemList[i]);
+                count = Mathf.Min(count, opponentItemList.Count);
+                for (int i = count - 1; i >= 0; i--) {
+                    opponentItemList.RemoveAt(i);
                 }
             }      
         }

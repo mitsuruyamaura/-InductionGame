@@ -30,7 +30,7 @@ namespace yamap_BoardGame {
             Marker marker = Instantiate(prefab, panel.transform);
 
             // ‚‚³’²®(2‚Â–ÚˆÈ~‚ªd‚È‚é‚æ‚¤‚É‚·‚é)
-            marker.transform.localPosition = new(0, marker.transform.localPosition.y + (step * 0.3f), 0);
+            marker.transform.localPosition = new(prefab.transform.position.x, marker.transform.localPosition.y + (step * 0.3f), prefab.transform.position.z);
             float scale = marker.transform.localScale.x;
             marker.transform.localScale = Vector3.zero;
 
